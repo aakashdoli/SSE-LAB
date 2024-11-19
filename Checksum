@@ -1,0 +1,54 @@
+import java.util.Scanner;
+
+public class Checksum {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input the data values
+        System.out.println("Enter the number of data values:");
+        int n = scanner.nextInt();
+
+        int[] data = new int[n];
+        System.out.println("Enter the data values:");
+        for (int i = 0; i < n; i++) {
+            data[i] = scanner.nextInt();
+        }
+
+        // Calculate and display checksum
+        int checksum = calculateChecksum(data);
+        System.out.println("Checksum: " + checksum);
+
+        // Transmit data with checksum
+        System.out.println("Transmitted data with checksum:");
+        for (int value : data) {
+            System.out.print(value + " ");
+        }
+        System.out.println(checksum);
+
+        // Receiver input for verification
+        System.out.println("Enter received data (with checksum):");
+        int[] receivedData = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            receivedData[i] = scanner.nextInt();
+        }
+
+        // Verify checksum
+        System.out.println(verifyChecksum(receivedData) ? 
+            "No error detected." : "Error detected.");
+        scanner.close();
+    }
+
+    // Calculate checksum by summing data and taking complement
+    public static int calculateChecksum(int[] data) {
+        int sum = 0;
+        for (int value : data) sum += value;
+        return ~sum;
+    }
+
+    // Verify checksum by checking if the sum is zero
+    public static boolean verifyChecksum(int[] receivedData) {
+        int sum = 0;
+        for (int value : receivedData) sum += value;
+        return (sum == -1);
+    }
+}

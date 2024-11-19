@@ -1,0 +1,44 @@
+import java.util.Scanner;
+
+public class CRC {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input binary data and generator polynomial
+        System.out.println("Enter binary data:");
+        String data = scanner.nextLine();
+        System.out.println("Enter generator polynomial:");
+        String generator = scanner.nextLine();
+
+        // Append zeros and calculate remainder
+        String remainder = divide(data + "0".repeat(generator.length() - 1), generator);
+        String encodedData = data + remainder;
+        System.out.println("Encoded data with CRC: " + encodedData);
+
+        // Verify received data
+        System.out.println("Enter received data:");
+        String receivedData = scanner.nextLine();
+        System.out.println(divide(receivedData, generator).equals("0".repeat(generator.length() - 1)) ?
+                "No error detected." : "Error detected.");
+
+        scanner.close();
+    }
+
+    // Division method to calculate remainder
+    public static String divide(String dividend, String divisor) {
+        String temp = dividend.substring(0, divisor.length());
+        for (int i = divisor.length(); i <= dividend.length(); i++) {
+            temp = temp.charAt(0) == '1' ? xor(temp, divisor) : xor(temp, "0".repeat(divisor.length()));
+            if (i < dividend.length()) temp += dividend.charAt(i);
+            temp = temp.substring(1); // Drop the leading bit
+        }
+        return temp;
+    }
+
+    // XOR operation for binary strings
+    public static String xor(String a, String b) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < b.length(); i++) result.append(a.charAt(i) == b.charAt(i) ? '0' : '1');
+        return result.toString();
+    }
+}
